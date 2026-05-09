@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dataset Statistics - InclusiveVidPose</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Reuse styles from other pages */
+        .content {
+            max-width: 1200px;
+            margin: 100px auto 2rem;
+            padding: 0 2rem;
+        }
+
+        .section {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        h1, h2, h3 {
+            color: #2c3e50;
+            margin: 1.5rem 0;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            text-align: center;
+            color: #333;
+            margin-bottom: 2rem;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 0.5rem;
+        }
+
+        p, li {
+            line-height: 1.6;
+            color: #555;
+            margin-bottom: 1rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr); /* Force 4 columns */
+            gap: 1.5rem; /* Slightly reduce gap to fit better */
+            margin: 2rem 0;
+            width: 100%; /* Ensure it takes full width */
+            overflow-x: auto; /* Add horizontal scroll if needed on small screens */
+            padding-bottom: 1rem; /* Space for scrollbar */
+        }
+
+        .stat-card {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            min-width: 0;
+        }
+
+        .stat-number {
+            font-size: 2.2rem; /* Slightly smaller font to fit better */
+            font-weight: bold;
+            color: #007bff;
+            margin: 0.5rem 0;
+            display: block;
+            white-space: nowrap; /* Prevent text from wrapping */
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .image-container {
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        .image-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .image-caption {
+            margin-top: 0.5rem;
+            color: #666;
+            font-style: italic;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+
+        th, td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        @media (max-width: 768px) {
+            .content {
+                padding: 0 1rem;
+                margin-top: 80px;
+            }
+
+            .section {
+                padding: 1.5rem;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">InclusiveVidPose</div>
+            <ul class="nav-links">
+                <li><a href="../index.html">Home</a></li>
+                <li><a href="data-collection.html">Data Collection</a></li>
+                <li><a href="keypoint-schema.html">Keypoint Schema</a></li>
+                <li><a href="annotation.html">Annotation</a></li>
+                <li><a href="statistics.html">Statistics</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="content">
+        <section class="section">
+            <h1>Dataset Statistics</h1>
+            
+            <div class="section-content">
+                <h2>Overview</h2>
+                <p>The InclusiveVidPose dataset contains a diverse collection of video sequences featuring individuals with various types of limb deficiencies. Below are the key statistics of our dataset.</p>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-number">313</span>
+                        <span class="stat-label">Videos</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">398</span>
+                        <span class="stat-label">Unique Individuals</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">327,235</span>
+                        <span class="stat-label">Frames Annotated</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">308,533</span>
+                        <span class="stat-label">Poses Annotated</span>
+                    </div>
+                </div>
+
+                <h2>Demographic Distribution</h2>
+                <div class="image-container">
+                    <img src="../image/limb_type_statics_01.png" alt="Demographic Distribution">
+                    <p class="image-caption">Figure 1: Overview of Participant Distribution by Deficiency Type, Gender, and Prosthesis. (a) Distribution of limb-deficiency types, with single-site deficiencies and multi-site cases. (b) Gender Distribution. (c) Distribution of individuals with and without prosthetic limbs.</p>
+                </div>
+
+                <h2>Limb Deficiency Types</h2>
+                <table>
+                    <tr>
+                        <th>Type</th>
+                        <th>Count</th>
+                        <th>Percentage</th>
+                    </tr>
+                    <tr>
+                        <td>Upper Limb Amputation</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Lower Limb Amputation</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Congenital Limb Difference</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Multiple Limb Differences</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </table>
+
+                <h2>Activity Distribution</h2>
+                <div class="image-container">
+                    <img src="../image/activity-distribution.png" alt="Activity Distribution">
+                    <p class="image-caption">Figure 2: Distribution of different activities in the dataset</p>
+                </div>
+
+                <h2>Dataset Splits</h2>
+                <table>
+                    <tr>
+                        <th>Split</th>
+                        <th>Videos</th>
+                        <th>Frames</th>
+                    </tr>
+                    <tr>
+                        <td>Training</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Validation</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Testing</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </table>
+
+                <h2>Annotation Statistics</h2>
+                <ul>
+                    <li>Average number of keypoints per frame: </li>
+                    <li>Total annotated instances: </li>
+                    <li>Average annotation time per video: </li>
+                    <li>Inter-annotator agreement: </li>
+                </ul>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 InclusiveVidPose. All rights reserved.</p>
+    </footer>
+</body>
+</html>

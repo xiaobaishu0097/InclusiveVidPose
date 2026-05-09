@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Annotation Procedure - InclusiveVidPose</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Reuse styles from other pages */
+        .content {
+            max-width: 1200px;
+            margin: 100px auto 2rem;
+            padding: 0 2rem;
+        }
+
+        .section {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        h1, h2, h3 {
+            color: #2c3e50;
+            margin: 1.5rem 0;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            text-align: center;
+            color: #333;
+            margin-bottom: 2rem;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 0.5rem;
+        }
+
+        p, li {
+            line-height: 1.6;
+            color: #555;
+            margin-bottom: 1rem;
+        }
+
+        ul {
+            padding-left: 1.5rem;
+        }
+
+        .image-container {
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        .image-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .image-caption {
+            margin-top: 0.5rem;
+            color: #666;
+            font-style: italic;
+        }
+
+        @media (max-width: 768px) {
+            .content {
+                padding: 0 1rem;
+                margin-top: 80px;
+            }
+
+            .section {
+                padding: 1.5rem;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">InclusiveVidPose</div>
+            <ul class="nav-links">
+                <li><a href="../index.html">Home</a></li>
+                <li><a href="data-collection.html">Data Collection</a></li>
+                <li><a href="keypoint-schema.html">Keypoint Schema</a></li>
+                <li><a href="annotation.html">Annotation</a></li>
+                <li><a href="statistics.html">Statistics</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="content">
+        <section class="section">
+            <h1>Data Annotation Procedure</h1>
+            <p>We annotate every individual with four label types: a pixel-level segmentation mask, a tight bounding box, a persistent tracking ID, limb-deficient body keypoints, and prosthesis information as illustrated in Figure 1.</p>
+            <div class="image-container">
+                <img src="../image/annotation_demo.png" alt="Annotation Process">
+                <p class="image-caption">Figure 1: Overview of frame-by-frame annotations. Consecutive video frames are shown on the top. For each individual with limb deficiency, we provide <span style="color: pink">a pixel-level segmentation mask</span>, <span style="color: green">a bounding box</span>, <span style="color: purple">a set of body keypoints</span>, and a tracking ID.</p>
+            </div>
+            <div class="section-content">
+                <h2>Annotation Team Training</h2>
+                <p>We recruited twelve annotators through a professional data-labeling service. All had prior experience with human body keypoint annotation. Before beginning work, each annotator completed a focused training session led by an internationally accredited para-athletics classifier. This preparation ensured that every team member understood the anatomical variation found in individuals with limb deficiencies and the requirements of our extended keypoint schema. Our annotation team underwent extensive training to ensure accurate and consistent labeling of the dataset. </p>
+                <p>Training included:</p>
+                <ul>
+                    <li>12 annotators recruited from a professional data-labeling service, with prior experience in human body keypoint annotation</li>
+                    <li>All annotators completed training sessions led by an internationally accredited para-athletics classifier.</li>
+                    <li>Understanding different types of limb deficiencies</li>
+                    <li>Familiarization with our keypoint schema</li>
+                    <li>Practice sessions with sample videos</li>
+                    <li>Quality control measures</li>
+                </ul>
+
+                <div class="image-container">
+                    <img src="../image/annotation-process.png" alt="Annotation Process">
+                    <p class="image-caption">Figure 1: Our annotation workflow and quality control process</p>
+                </div>
+
+                <h2>Bounding Box, Segmentation Mask and Tracking ID</h2>
+                <p>We use the open-source platform X-AnyLabeling together with Segment Anything 2 promptable segmentation to generate initial masks. For each individual, annotators first merge all segmentation masks sharing the same tracking ID in a given frame and compute the tightest enclosing bounding box around that merged mask. They then refine a pixel-accurate segmentation mask and confirm the persistent tracking ID. SAM2’s ability to generalize zero-shot to unseen residual-limb shapes cuts mask-drawing time by over 50%. To maintain high quality, we enforce an 80% accuracy threshold: after one annotator finishes a batch, a second annotator cross-checks it. Any batch with more than twenty percent of masks showing clear errors is returned for revision. 
+                </p> 
+                <p>Each frame is annotated with:</p>
+                <ul>
+                    <li><strong>Bounding boxes</strong> around each individual</li>
+                    <li><strong>Segmentation masks</strong> for precise body part localization</li>
+                    <li><strong>Tracking IDs</strong> to maintain identity across frames</li>
+                </ul>
+
+                <h2>Keypoint Annotation Process</h2>
+                <p>To capture each subject’s unique anatomy, two trained annotators and one accredited para-athletics classifier review all 401 individuals’ disability profiles and agree on a personalized 25-keypoint schema. Each schema is represented by a 25-element presence mask that indicates which of the seventeen COCO landmarks and eight residual-limb endpoints apply to that individual. For example, a mask value of 0 for the right-ankle keypoint (because it is absent) and 1 for the right-knee keypoint (because it is present). Annotators then label every frame according to that schema, marking each keypoint’s image coordinates. 
+                We follow the COCO visibility convention: any landmark that is within the frame but occluded receives a visibility flag of 1. We require an 80\% point-level agreement rate between annotators on 5\% of sampled data, where ``agreement” means no visually apparent errors in landmark placement. If more than 20\% of sampled points in a batch fall below this threshold, the original annotator must correct the entire batch. This structured, expert-guided workflow ensures unambiguous placement of residual-limb keypoints and delivers highly reliable pose data.</p>
+                <p>Our keypoint annotation process includes:</p>
+                <ul>
+                    <li>Frame-by-frame annotation of all visible keypoints</li>
+                    <li>Special handling for residual limbs and prosthetics</li>
+                    <li>Occlusion labeling for partially visible keypoints</li>
+                    <li>Inter-annotator agreement checks</li>
+                </ul>
+
+                <div class="image-container">
+                    <img src="../image/annotation-example.png" alt="Annotation Example">
+                    <p class="image-caption">Figure 2: Example of keypoint annotations on a video frame</p>
+                </div>
+
+                <h2>Quality Assurance</h2>
+                <p>To ensure annotation quality, we implemented:</p>
+                <ul>
+                    <li>Multi-stage review process</li>
+                    <li>Random sampling for quality checks</li>
+                    <li>Continuous feedback and retraining</li>
+                    <li>Inter-annotator agreement metrics</li>
+                </ul>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 InclusiveVidPose. All rights reserved.</p>
+    </footer>
+</body>
+</html>

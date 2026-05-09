@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pose Annotation Practice | InclusiveVidPose</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .annotation-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 6rem auto 0; /* Added top margin to prevent header overlap */
+        }
+
+        .instructions {
+            flex: 1;
+            min-width: 300px;
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .annotation-area {
+            flex: 2;
+            min-width: 300px;
+            position: relative;
+            border: 2px dashed #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        #pose-image {
+            width: 100%;
+            display: block;
+            cursor: crosshair;
+        }
+
+        .keypoint {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background-color: #ff4757;
+            border: 2px solid white;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            cursor: move;
+            z-index: 10;
+        }
+
+        .keypoint:hover {
+            transform: translate(-50%, -50%) scale(1.3);
+        }
+
+        .keypoint-label {
+            position: absolute;
+            font-size: 12px;
+            color: white;
+            background: rgba(0,0,0,0.7);
+            padding: 2px 6px;
+            border-radius: 4px;
+            white-space: nowrap;
+            pointer-events: none;
+            z-index: 11;
+        }
+
+        .control-panel {
+            margin-top: 1.5rem;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 0.6rem 1.2rem;
+            background-color: #6e48aa;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #5d3a9e;
+        }
+
+        #feedback {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 4px;
+            display: none;
+        }
+
+        .correct {
+            background-color: #4caf50;
+            color: white;
+        }
+
+        .incorrect {
+            background-color: #ff5252;
+            color: white;
+        }
+
+        .keypoint-guide {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .guide-item {
+            display: flex;
+            align-items: center;
+            font-size: 0.9rem;
+        }
+
+        .guide-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 0.5rem;
+            border: 2px solid white;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">InclusiveVidPose</div>
+            <button class="menu-btn" aria-label="Toggle navigation">
+                <i class="fas fa-bars"></i>
+            </button>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropbtn">Dataset <i class="fas fa-chevron-down"></i></a>
+                    <div class="dropdown-content">
+                        <a href="#overview">Overview</a>
+                        <a href="#download">Download</a>
+                        <a href="#terms">Terms of Use</a>
+                    </div>
+                </li>
+                <li><a href="evaluation.html">Evaluation</a></li>
+                <li><a href="pose-annotation.html" class="active">Pose Annotation</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="annotation-container">
+        <div class="instructions">
+            <h2>Pose Annotation Guide</h2>
+            <p>Place the keypoints on the image to match the pose. Follow the guide on the right to position each point correctly.</p>
+            
+            <h3>Keypoint Guide</h3>
+            <div class="keypoint-guide" id="keypoint-guide">
+                <!-- Will be populated by JavaScript -->
+            </div>
+
+            <div class="control-panel">
+                <button id="check-btn">Check My Annotation</button>
+                <button id="reset-btn">Reset Points</button>
+            </div>
+
+            <div id="feedback"></div>
+        </div>
+
+        <div class="annotation-area">
+            <img id="pose-image" src="images/pose-sample.jpg" alt="Pose for annotation">
+            <!-- Keypoints will be added here by JavaScript -->
+        </div>
+    </main>
+
+    <script>
+        // Keypoint definitions with names and colors
+        const keypoints = [
+            { id: 0, name: 'Nose', color: '#FF0000' },
+            { id: 1, name: 'Left Eye', color: '#FF7F00' },
+            { id: 2, name: 'Right Eye', color: '#FFD700' },
+            { id: 3, name: 'Left Ear', color: '#00FF00' },
+            { id: 4, name: 'Right Ear', color: '#0000FF' },
+            { id: 5, name: 'Left Shoulder', color: '#4B0082' },
+            { id: 6, name: 'Right Shoulder', color: '#9400D3' },
+            { id: 7, name: 'Left Elbow', color: '#00FF7F' },
+            { id: 8, name: 'Right Elbow', color: '#00BFFF' },
+            { id: 9, name: 'Left Wrist', color: '#FF69B4' },
+            { id: 10, name: 'Right Wrist', color: '#FF1493' },
+            { id: 11, name: 'Left Hip', color: '#7CFC00' },
+            { id: 12, name: 'Right Hip', color: '#32CD32' },
+            { id: 13, name: 'Left Knee', color: '#008080' },
+            { id: 14, name: 'Right Knee', color: '#00FFFF' },
+            { id: 15, name: 'Left Ankle', color: '#000080' },
+            { id: 16, name: 'Right Ankle', color: '#8A2BE2' },
+            // Additional keypoints if needed
+            { id: 17, name: 'Neck', color: '#FF6347' },
+            { id: 18, name: 'Left Hand', color: '#FFA500' },
+            { id: 19, name: 'Right Hand', color: '#FF4500' },
+            { id: 20, name: 'Left Foot', color: '#2E8B57' },
+            { id: 21, name: 'Right Foot', color: '#20B2AA' },
+            { id: 22, name: 'Left Heel', color: '#8B4513' },
+            { id: 23, name: 'Right Heel', color: '#D2691E' },
+            { id: 24, name: 'Pelvis', color: '#9932CC' }
+        ];
+
+        // Correct positions (example - should be replaced with actual coordinates)
+        const correctPositions = {
+            // These are example positions - replace with actual correct positions
+            0: { x: 0.5, y: 0.1 }, // Nose
+            1: { x: 0.45, y: 0.08 }, // Left Eye
+            2: { x: 0.55, y: 0.08 }, // Right Eye
+            // Add more positions...
+        };
+
+        // Tolerance for correct position (as percentage of image dimensions)
+        const POSITION_TOLERANCE = 0.05;
+
+        // DOM elements
+        const poseImage = document.getElementById('pose-image');
+        const annotationArea = document.querySelector('.annotation-area');
+        const keypointGuide = document.getElementById('keypoint-guide');
+        const checkBtn = document.getElementById('check-btn');
+        const resetBtn = document.getElementById('reset-btn');
+        const feedbackDiv = document.getElementById('feedback');
+
+        // Track placed keypoints
+        const placedKeypoints = new Map();
+        let currentKeypointIndex = 0;
+
+        // Initialize the page
+        function init() {
+            // Populate keypoint guide
+            keypoints.forEach(kp => {
+                const guideItem = document.createElement('div');
+                guideItem.className = 'guide-item';
+                guideItem.innerHTML = `
+                    <div class="guide-color" style="background-color: ${kp.color};"></div>
+                    <span>${kp.name}</span>
+                `;
+                keypointGuide.appendChild(guideItem);
+            });
+
+            // Set up event listeners
+            poseImage.addEventListener('click', handleImageClick);
+            checkBtn.addEventListener('click', checkAnnotation);
+            resetBtn.addEventListener('click', resetAnnotation);
+
+            // Load sample image
+            loadSampleImage();
+        }
+
+
+        // Handle image click to place keypoint
+        function handleImageClick(event) {
+            const rect = poseImage.getBoundingClientRect();
+            const x = (event.clientX - rect.left) / rect.width;
+            const y = (event.clientY - rect.top) / rect.height;
+
+            // Place the current keypoint
+            placeKeypoint(currentKeypointIndex, x, y);
+
+            // Move to next keypoint
+            currentKeypointIndex = (currentKeypointIndex + 1) % keypoints.length;
+        }
+
+        // Place a keypoint on the image
+        function placeKeypoint(index, x, y) {
+            // Remove existing keypoint if it exists
+            if (placedKeypoints.has(index)) {
+                const existing = placedKeypoints.get(index);
+                existing.element.remove();
+            }
+
+            // Create new keypoint element
+            const keypoint = document.createElement('div');
+            keypoint.className = 'keypoint';
+            keypoint.style.left = `${x * 100}%`;
+            keypoint.style.top = `${y * 100}%`;
+            keypoint.style.backgroundColor = keypoints[index].color;
+            
+            // Add label
+            const label = document.createElement('div');
+            label.className = 'keypoint-label';
+            label.textContent = keypoints[index].name;
+            label.style.left = '15px';
+            label.style.top = '-25px';
+            
+            keypoint.appendChild(label);
+            annotationArea.appendChild(keypoint);
+
+            // Make keypoint draggable
+            makeDraggable(keypoint, index);
+
+            // Store reference
+            placedKeypoints.set(index, {
+                element: keypoint,
+                x,
+                y,
+                index
+            });
+        }
+
+        // Make a keypoint draggable
+        function makeDraggable(element, index) {
+            let isDragging = false;
+            let offsetX, offsetY;
+            const rect = poseImage.getBoundingClientRect();
+
+            element.addEventListener('mousedown', startDrag);
+
+            function startDrag(e) {
+                isDragging = true;
+                const rect = element.getBoundingClientRect();
+                offsetX = e.clientX - rect.left;
+                offsetY = e.clientY - rect.top;
+                document.addEventListener('mousemove', drag);
+                document.addEventListener('mouseup', stopDrag);
+                e.preventDefault();
+            }
+
+            function drag(e) {
+                if (!isDragging) return;
+                
+                const rect = poseImage.getBoundingClientRect();
+                let x = (e.clientX - rect.left - offsetX + 6) / rect.width;
+                let y = (e.clientY - rect.top - offsetY + 6) / rect.height;
+
+                // Constrain to image bounds
+                x = Math.max(0, Math.min(1, x));
+                y = Math.max(0, Math.min(1, y));
+
+                // Update position
+                element.style.left = `${x * 100}%`;
+                element.style.top = `${y * 100}%`;
+
+
+                // Update stored position
+                if (placedKeypoints.has(index)) {
+                    const kp = placedKeypoints.get(index);
+                    kp.x = x;
+                    kp.y = y;
+                }
+            }
+
+            function stopDrag() {
+                isDragging = false;
+                document.removeEventListener('mousemove', drag);
+                document.removeEventListener('mouseup', stopDrag);
+            }
+        }
+
+        // Check if annotation is correct
+        function checkAnnotation() {
+            if (placedKeypoints.size === 0) {
+                showFeedback('Please place at least one keypoint before checking.', 'incorrect');
+                return;
+            }
+
+            let correctCount = 0;
+            const totalKeypoints = Object.keys(correctPositions).length;
+            
+            // Check each placed keypoint
+            for (const [index, kp] of placedKeypoints.entries()) {
+                if (!correctPositions[index]) continue;
+                
+                const correctPos = correctPositions[index];
+                const dx = Math.abs(kp.x - correctPos.x);
+                const dy = Math.abs(kp.y - correctPos.y);
+                
+                if (dx <= POSITION_TOLERANCE && dy <= POSITION_TOLERANCE) {
+                    correctCount++;
+                    kp.element.style.borderColor = '#4caf50';
+                } else {
+                    kp.element.style.borderColor = '#ff5252';
+                }
+            }
+            
+            const accuracy = (correctCount / totalKeypoints) * 100;
+            if (accuracy > 80) {
+                showFeedback(`Great job! ${Math.round(accuracy)}% of your annotations are correct!`, 'correct');
+            } else {
+                showFeedback(`Try again! ${Math.round(accuracy)}% of your annotations are correct.`, 'incorrect');
+            }
+        }
+
+        // Reset the annotation
+        function resetAnnotation() {
+            placedKeypoints.forEach(kp => {
+                kp.element.remove();
+            });
+            placedKeypoints.clear();
+            currentKeypointIndex = 0;
+            feedbackDiv.style.display = 'none';
+        }
+
+        // Show feedback to user
+        function showFeedback(message, type) {
+            feedbackDiv.textContent = message;
+            feedbackDiv.className = type;
+            feedbackDiv.style.display = 'block';
+        }
+
+        // Load a sample image
+        function loadSampleImage() {
+            // For now using a placeholder, replace with actual image loading logic
+            // poseImage.src = 'path/to/sample-image.jpg';
+        }
+
+        // Initialize when DOM is loaded
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>

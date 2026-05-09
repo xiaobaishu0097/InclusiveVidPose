@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InclusiveVidPose</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">InclusiveVidPose</div>
+            <button class="menu-btn" aria-label="Toggle navigation">
+                <i class="fas fa-bars"></i>
+            </button>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropbtn">Dataset <i class="fas fa-chevron-down"></i></a>
+                    <div class="dropdown-content">
+                        <a href="#overview">Overview</a>
+                        <a href="#download">Download</a>
+                        <a href="#terms">Terms of Use</a>
+                    </div>
+                </li>
+                <li><a href="evaluation.html">Evaluation</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <!-- <h1>Welcome to InclusiveVidPose</h1>
+            <p>First Video Pose Dataset for Individuals with Limb Deficiencies</p> -->
+            <div class="video-container">
+                <video id="hero-video" controls autoplay muted loop playsinline>
+                    <source src="video/67c9fb839746c99d1b8c0d6f9bdb033d.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                <div id="video-debug" style="position: relative; z-index: 5; margin-top: 0px; padding: 0px; background: rgba(0,0,0,0.7); color: white; border-radius: 4px; font-family: monospace;">
+                    <p>Video debug information:</p>
+                    <pre id="video-info" style="margin: 1px 0 0 0; color: #fff;">Loading video information...</pre>                </div>
+            </div>
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    const video = document.getElementById('hero-video');
+                    const videoInfo = document.getElementById('video-info');
+                    
+                    // Debug information
+                    function updateDebugInfo() {
+                        const info = [
+                            'Video readyState: ' + video.readyState,
+                            'Video error: ' + (video.error ? video.error.message : 'None'),
+                            'Video networkState: ' + video.networkState,
+                            'Video src: ' + (video.currentSrc || 'Not loaded'),
+                            'Video duration: ' + video.duration + ' seconds',
+                            'Video dimensions: ' + video.videoWidth + 'x' + video.videoHeight,
+                            'Browser: ' + navigator.userAgent
+                        ];
+                        videoInfo.textContent = info.join('\n');
+                    }
+                    
+                    // Check video status periodically
+                    const checkVideo = setInterval(function() {
+                        if (video.readyState >= 2) { // HAVE_CURRENT_DATA
+                            updateDebugInfo();
+                            clearInterval(checkVideo);
+                        }
+                    }, 500);
+                    
+                    // Also update on various events
+                    ['loadeddata', 'error', 'stalled', 'suspend', 'abort', 'emptied', 'ended'].forEach(function(event) {
+                        video.addEventListener(event, updateDebugInfo);
+                    });
+                });
+            </script>
+        </div>
+    </section>
+
+    <h2 class="section-title">InclusiveVidPose: The First Video Pose Dataset<br>for Individuals with Limb Deficiencies</h2>
+    
+    <section id="research" class="research">
+        <div class="research-container">
+            <div class="feature-list">
+                <h3>InclusiveVidPose Dataset Features</h3>
+                <ul>
+                    <li><i class="fas fa-check-circle"></i> 313 high-quality video sequences</li>
+                    <li><i class="fas fa-check-circle"></i> 327k annotated frames</li>
+                    <li><i class="fas fa-check-circle"></i> 398 unique individuals with limb deficiencies</li>
+                    <li><i class="fas fa-check-circle"></i> 25 keypoints with 8 residual-limb end</li>
+                    <li><i class="fas fa-check-circle"></i> Subject segmentation mask</li>
+                    <li><i class="fas fa-check-circle"></i> Subject bounding box</li>
+                    <li><i class="fas fa-check-circle"></i> Subject tracking ID</li>
+                    <li><i class="fas fa-check-circle"></i> Residual limb prosthesis information</li>
+                </ul>
+            </div>
+            <div class="paper-image">
+                <img src="image/paper.png" alt="Research Paper Cover" class="paper-cover">
+            </div>
+            <div class="paper-info">
+                <h3>InclusiveVidPose: A Video-based Dataset for Human Pose Estimation of Individuals with Limb Deficiencies</h3>
+                <p>Authors: InclusiveVidPose Team</p>
+                <!-- <p>Published: Conference Name, Year</p> -->
+                <div class="download-links">
+                    <a href="#" class="download-btn">View Paper</a>
+                    <a href="https://drive.google.com/file/d/1_yEEAPzBnm97nbJxpdF5uD8pDV211NRy/view?usp=sharing" class="download-btn">View Dataset</a>
+                    <a href="https://github.com/xiaobaishu0097/InclusiveVidPose" class="download-btn">View Code</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+    <section id="projects" class="projects">
+        <div class="project-grid">
+            <!-- <div class="project-card">
+                <h3>Emerging Challenges of HPE</h3>
+                <p>Project description...</p>
+                <button class="project-btn">Learn More</button>
+            </div> -->
+            <div class="project-card">
+                <h3>Data Collection</h3>
+                <ul class="reason-list">
+                    <li>Why do we build our dataset from videos instead of curated images?</li>
+                    <li>Data sourcing</li>
+                    <li>Data filtering and curation</li>
+                </ul>
+                <button class="project-btn"><a href="pages/data-collection.html" class="project-btn">Learn More</a></button>
+            </div>
+            <div class="project-card">
+                <h3>Our Keypoint Schema</h3>
+                <ul class="reason-list">
+                    <li>Necessity of Specialized Human Body Keypoint Schema</li>
+                    <li>Keypoint Schema Design</li>
+                </ul>
+                <button class="project-btn"><a href="pages/keypoint-schema.html" class="project-btn">Learn More</a></button>
+            </div>
+            <div class="project-card">
+                <h3>Data Annotation Procedure</h3>
+                <ul class="reason-list">
+                    <li>Annotation Team Training</li>
+                    <li>Bounding Box, Segmentation Mask, Tracking ID and Prosthesis Info</li>
+                    <li>Keypoint Annotation Process</li>
+                </ul>
+                <button class="project-btn"><a href="pages/annotation.html" class="project-btn">Learn More</a></button>
+            </div>
+            <div class="project-card">
+                <h3>Dataset Statistics</h3>
+                <ul class="reason-list">
+                    <li>More details about dataset statistics</li>
+                </ul>
+                <button class="project-btn"><a href="pages/statistics.html" class="project-btn">Learn More</a></button>
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="about">
+        <div class="about-container">
+            <div class="about-text">
+                <h2>Why do we need InclusiveVidPose?</h2>
+                <p>Approximately 445.2 million individuals worldwide are living with traumatic amputations, and an estimated 31.64 million children aged 0–14 have congenital limb differences. These people could benefit greatly from accurate human pose estimation (HPE) in applications such as rehabilitation monitoring and health assessment. 
+                    Regrettably, existing HPE systems trained on standard datasets fail to accommodate atypical anatomies and prosthetic occlusions, leaving this population unsupported. However, widely used benchmarks like MS COCO and MPII Human Pose include only able-bodied people with complete sets of keypoints. These datasets and the methods built on them assume that every keypoint of a presented individual exists, making no provision for missing or altered limbs. 
+                    As demonstrated in the figure next, the MS COCO–trained ViTPose model produces significant errors when applied to images of individuals with limb deficiencies. <strong>Consequently, people with limb deficiencies are excluded from current benchmarks, and models trained on these datasets fail to generalize to their anatomies.</strong>
+                    To address this gap, we introduce InclusiveVidPose, the first video-based HPE dataset focused on individuals with limb deficiencies. 
+                </p>
+            </div>
+            <div class="about-image">
+                <img src="image/case_study4_01.png" alt="Why We Need InclusiveVidPose" class="about-img">
+            </div>
+        </div>
+        <h2>What is InclusiveVidPose?</h2>
+        <p>InclusiveVidPose Dataset, the first video-based HPE dataset specific for individuals with limb deficiencies.
+            We collected 313 videos, totaling over 327k frames, and covering 398 individuals with amputations, congenital limb differences, and prosthetic limbs. 
+            We introduce custom keypoints at each residual limb end to capture individual anatomical variations. 
+            </p>
+    </section>
+
+
+
+
+
+    <section id="dataset" class="dataset">
+        <div class="dataset-container">
+            <div class="dataset-content">
+                <h2>Dataset Examples</h2>
+                <div class="dataset-image">
+                    <img src="image/dataset_demonstration.png" alt="Dataset Examples" class="dataset-img">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="contact">
+        <div class="contact-container">
+            <div class="contact-content">
+                <!-- <h2>Contact</h2> -->
+                <div class="contact-grid">
+                    <div class="contact-info">
+                        <div class="contact-item">
+                            <i class="fas fa-envelope"></i>
+                            <p><a href="mailto:du_heming@hotmail.com">du_heming@hotmail.com</a></p>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-phone"></i>
+                            <p>+123456789</p>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <p>Location</p>
+                        </div>
+                    </div>
+                    <div class="social-links">
+                        <a href="https://github.com/xiaobaishu0097/InclusiveVidPose" class="social-link" aria-label="GitHub repository"><i class="fab fa-github"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2025 InclusiveVidPose. All rights reserved.</p>
+    </footer>
+
+     <script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Keypoint Schema - InclusiveVidPose</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Main content styles */
+        .content {
+            max-width: 1200px;
+            margin: 100px auto 2rem;
+            padding: 0 2rem;
+        }
+
+        .section {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 2rem;
+            text-align: center;
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            color: #2c3e50;
+            margin: 2rem 0 1rem;
+            font-size: 1.8rem;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 0.5rem;
+        }
+
+        p {
+            line-height: 1.6;
+            color: #555;
+            margin-bottom: 1.5rem;
+        }
+
+        ul {
+            padding-left: 1.5rem;
+        }
+
+        li {
+            margin-bottom: 0.8rem;
+            color: #555;
+            line-height: 1.5;
+        }
+
+        /* Image container styles */
+        .image-container {
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        .image-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .image-caption {
+            margin-top: 0.5rem;
+            color: #666;
+            font-style: italic;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .content {
+                padding: 0 1rem;
+                margin-top: 80px;
+            }
+
+            .section {
+                padding: 1.5rem;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">InclusiveVidPose</div>
+            <ul class="nav-links">
+                <li><a href="../index.html">Home</a></li>
+                <li><a href="data-collection.html">Data Collection</a></li>
+                <li><a href="keypoint-schema.html">Keypoint Schema</a></li>
+                <li><a href="annotation.html">Annotation</a></li>
+                <li><a href="statistics.html">Statistics</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="content">
+        <section class="section">
+            <h1>InclusiveVidPose Keypoint Schema</h1>
+            
+            <div class="section-content">
+                <h2>Necessity of Specialized Human Body Keypoint Schema</h2>
+                <p>Standard keypoint schemas like COCO and MPII are designed for able-bodied individuals and lack the necessary annotations for people with limb deficiencies. Our specialized schema addresses this gap by including:</p>
+                <ul>
+                    <li>Residual-limb end keypoints</li>
+                    <li>Prosthetic joint markers</li>
+                    <li>Adaptive connections for various amputation levels</li>
+                </ul>
+
+                <h2>Keypoint Schema Design</h2>
+                <p>Our keypoint schema includes 17 standard body joints plus 8 additional keypoints specifically for residual limbs and prosthetics:</p>
+                
+                <div class="image-container">
+                    <img src="../image/keypoints_demo_01.png" alt="Keypoint Schema Visualization">
+                    <p class="image-caption">Figure 1: Our extended keypoint schema including residual limb markers</p>
+                </div>
+
+                <h3>Standard Keypoints (17)</h3>
+                <ul>
+                    <li>Head (nose, eyes, ears)</li>
+                    <li>Shoulders, elbows, wrists</li>
+                    <li>Hips, knees, ankles</li>
+                    <li>Neck, pelvis</li>
+                </ul>
+
+                <h3>Additional Keypoints (8)</h3>
+                <ul>
+                    <li>Residual limb end points (4)</li>
+                    <li>Prosthetic joint markers (4)</li>
+                </ul>
+
+                <h2>Implementation Details</h2>
+                <p>Our schema is implemented with the following considerations:</p>
+                <ul>
+                    <li>Backward compatibility with existing models</li>
+                    <li>Flexible to accommodate various amputation types</li>
+                    <li>Clear documentation for annotators</li>
+                    <li>Validation protocols for annotation quality</li>
+                </ul>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 InclusiveVidPose. All rights reserved.</p>
+    </footer>
+</body>
+</html>
